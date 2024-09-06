@@ -29,7 +29,7 @@ class Advertisement(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(64), nullable=False)
-    description: Mapped[str] = mapped_column(String(150), nullable=False)
+    description: Mapped[str] = mapped_column(String(150), nullable=True)
     owner: Mapped[str] = mapped_column(String(72), nullable=False)
     registration_time: Mapped[datetime.datetime] = mapped_column(
         DateTime, server_default=func.now()

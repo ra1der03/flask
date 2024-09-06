@@ -1,14 +1,12 @@
-import flask_bcrypt
 import pydantic
 from flask import Flask, Response, jsonify, request
 from flask.views import MethodView
 from sqlalchemy.exc import IntegrityError
 
-from models import Session, Advertisement
-from schema import CreateAdvertisement, Schema, UpdateAdvertisement
+from models.models import Session, Advertisement
+from models.schema import CreateAdvertisement, Schema, UpdateAdvertisement
 
 app = Flask("app")
-bcrypt = flask_bcrypt.Bcrypt(app)
 
 
 class HttpError(Exception):
@@ -19,7 +17,12 @@ class HttpError(Exception):
 
 
 def validate(schema_cls: Schema, json_data: dict):
-    return json_data
+    try:
+        return schema_cls(**json_data).dict(exclude_unset=True)
+    except pydantic.ValidationError as err:
+        error = err.errors()[0]
+        error.pop("ctx", None)
+        raise HttpError(409, error)
 
 
 @app.errorhandler(HttpError)
@@ -64,8 +67,9 @@ class AdvertisementView(MethodView):
         return request.session
 
     def get(self, advertisement_id):
-        advertisement = add_advertisement(advertisement_id)
+        advertisement = get_advertisement(advertisement_id)
         return jsonify(advertisement.json)
+
 
     def post(self):
         json_data = validate(CreateAdvertisement, request.json)
@@ -73,8 +77,8 @@ class AdvertisementView(MethodView):
         return jsonify(advertisement.json)
 
     def patch(self, advertisement_id):
-        json_data = validate(UpdateAdvertisement, request.json)
         advertisement = get_advertisement(advertisement_id)
+        json_data = validate(UpdateAdvertisement, request.json)
         for field, value in json_data.items():
             setattr(advertisement, field, value)
         advertisement = add_advertisement(advertisement)

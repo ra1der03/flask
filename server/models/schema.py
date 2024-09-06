@@ -1,24 +1,26 @@
 from typing import Optional, Type
 
 import pydantic
-from pydantic import BaseModel
+from pydantic.v1 import BaseModel
 
 
 class BaseAdvertisement(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
-    owner: Optional[str]
-    @pydantic.field_validator("owner")
-    @classmethod
-    def valid_ownerName(cls, value):
-        if value is None:
-            raise ValueError("password isn't valid")
-        return value
+    name: str
+    description: str
+    owner: str
+
+    # @pydantic.field_validator("owner")
+    # def valid_owner_name(cls, value):
+    #     flag = False
+    #     flag = value.isdigit()
+    #     if flag:
+    #         raise ValueError("owner name isn't valid")
+    #     return value
 
 
 class CreateAdvertisement(BaseAdvertisement):
     name: str
-    description: Optional[str]
+    description: str
     owner: str
 
 
