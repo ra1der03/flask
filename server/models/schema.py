@@ -9,13 +9,13 @@ class BaseAdvertisement(BaseModel):
     description: str
     owner: str
 
-    # @pydantic.field_validator("owner")
-    # def valid_owner_name(cls, value):
-    #     flag = False
-    #     flag = value.isdigit()
-    #     if flag:
-    #         raise ValueError("owner name isn't valid")
-    #     return value
+    @pydantic.field_validator("owner")
+    def valid_owner_name(cls, value):
+        flag = False
+        flag = value.isdigit()
+        if flag:
+            raise ValueError("owner name isn't valid")
+        return value
 
 
 class CreateAdvertisement(BaseAdvertisement):
