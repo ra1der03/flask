@@ -1,7 +1,7 @@
 from typing import Optional, Type
 
 import pydantic
-from pydantic.v1 import BaseModel
+from pydantic.v1 import BaseModel, validator
 
 
 class BaseAdvertisement(BaseModel):
@@ -9,7 +9,7 @@ class BaseAdvertisement(BaseModel):
     description: str
     owner: str
 
-    @pydantic.field_validator("owner")
+    @validator("owner")
     def valid_owner_name(cls, value):
         flag = False
         flag = value.isdigit()
