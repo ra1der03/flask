@@ -3,8 +3,8 @@ import pydantic
 from aiohttp import web
 from sqlalchemy.exc import IntegrityError
 import json
-from models.models import Base, Session, Advertisement, engine
-from models.schema import CreateAdvertisement, Schema, UpdateAdvertisement
+from model.models import Base, Session, Advertisement, engine
+from model.schema import CreateAdvertisement, Schema, UpdateAdvertisement
 
 app = web.Application()
 
