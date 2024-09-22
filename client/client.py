@@ -1,32 +1,21 @@
-import requests
-
-response = requests.post(
-    "http://127.0.0.1:5000/advertisement/", json={
-        'name': 'Cat', 'description': 'just a cat', 'owner': 'George'
-    })
-print(response.status_code)
-print(response.json())
+import asyncio
+import aiohttp
 
 
-response = requests.patch("http://127.0.0.1:5000/advertisement/1/",
-                        json={"name": "dog"})
+async def main():
+    client = aiohttp.ClientSession()
 
-#
-# response = requests.delete("http://127.0.0.1:5000/advertisement/1/")
+    response = await client.get(
+        "http://127.0.0.1:8080/advertisement/1",
+        # json={'name': 'True', 'description': 'just a True', 'owner': 'George'}
+    )
 
+    # response = await client.get("http://127.0.0.1:8080/advertisement/1")
 
-print(response.status_code)
-print(response.json())
-
-# print(response.status_code)
-# print(response.json())
-#
-response = requests.get("http://127.0.0.1:5000/advertisement/1/")
-#
-# print(response.status_code)
-# print(response.json())
+    data = await response.text()
+    print(data)
+    await client.close()
 
 
+asyncio.run(main())
 
-print(response.status_code)
-print(response.json())
